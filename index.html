@@ -246,7 +246,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, #01163b 0%, rgba(1, 22, 59, .55) 45%, rgba(1, 22, 59, .82) 100%);
+      background: linear-gradient(180deg, #01163b 0%, rgba(1, 22, 59, .55) 0 rgba(1, 22, 59, .82) 100%);
     }
 
     .hero-content {
@@ -822,7 +822,7 @@
 
     /* ─── CARD SECTION ───────────────────────────────────── */
     .card-section {
-      background: var(--card-bg);
+      background: #051C44;
       position: relative;
       overflow: hidden;
       min-height: 960px;
@@ -834,14 +834,19 @@
 
     .card-section-bg {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 50%;
+      width: 1440px;
+      height: auto;
       z-index: 0;
+      transform: translateX(-50%);
+      pointer-events: none;
     }
 
     .card-section-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      display: block;
+      width: 1440px;
+      height: auto;
     }
 
     .card-content {
@@ -1275,7 +1280,8 @@
         <div class="product-card-grad"></div>
         <div class="product-card-body">
           <p class="product-card-title">Cartão sem anuidade</p>
-          <p class="product-card-desc">Cartão de crédito sem anuidade, com programa de pontos e limites que se adaptam ao
+          <p class="product-card-desc">Cartão de crédito sem anuidade, com programa de pontos e limites que se adaptam
+            ao
             seu perfil.</p>
         </div>
       </div>
@@ -1320,7 +1326,7 @@
           <div class="ecosystem-icon">
             <img src="assets/icon-ecosystem.png" alt="" />
           </div>
-          <h2 class="ecosystem-headline">Um ecossistema completo ao seu lado</h2>
+          <h2 class="ecosystem-headline">Um ecossistema<br>completo ao seu lado</h2>
           <p class="ecosystem-desc">Conta, cartão, seguros e assistências Porto em um único lugar. Menos apps, mais
             praticidade.</p>
         </div>
@@ -1430,7 +1436,8 @@
         <span class="card-eyebrow-text">Cartão Porto Bank</span>
       </div>
       <h2 class="card-headline reveal reveal-d1">Um cartão sem<br>anuidade e com benefícios reais.</h2>
-      <p class="card-desc reveal reveal-d2">Sem taxas escondidas, sem letra miúda. O cartão Porto Bank foi criado para ser
+      <p class="card-desc reveal reveal-d2">Sem taxas escondidas, sem letra miúda. O cartão Porto Bank foi criado para
+        ser
         simples.</p>
       <div class="card-ctas reveal reveal-d3">
         <a href="#" class="btn-pill">Programa de pontos</a>
@@ -1589,11 +1596,11 @@
 
     function updatePhoneOnScroll() {
       if (!fixedPhone || !stickyWrapper || !handSection || !handImg) return;
-      
+
       const vh = window.innerHeight;
       const scrollY = window.scrollY || window.pageYOffset;
       const phoneHeight = fixedPhone.offsetHeight || 535;
-      
+
       const security = document.querySelector('.security');
       if (!security) return;
 
@@ -1619,13 +1626,13 @@
 
       // Convert absolute Y to screen Y
       const screenY = targetAbsY - scrollY;
-      
+
       // Calculate relative translateY based on CSS top property
       const baseTop = (vh / 2) - (phoneHeight / 2);
       const translateY = screenY - baseTop;
 
       fixedPhone.style.transform = `translateY(${translateY}px)`;
-      
+
       // Control visibility
       if (scrollY + vh > (scrollY + secRect.top)) {
         fixedPhone.style.opacity = '1';

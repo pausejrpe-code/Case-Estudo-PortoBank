@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porto Bank Financeiro simples. Sólido desde sempre.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+    /* --- RESET --------------------------------------------------- */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-optical-sizing: auto;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background: #fff;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button {
+      border: none;
+      background: none;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --hero-bg: #01163b;
+      --card-bg: #051c44;
+      --footer-bg: #0a1628;
+      --blue-primary: #003c8f;
+      --blue-highlight: #82bcff;
+      --blue-link: #3b97df;
+      --blue-hand: #8fb9fd;
+      --blue-security: #e7f1fc;
+      --text-dark: #2c2c2c;
+      --text-muted: #99a0ad;
+      --stats-num: #aabfe5;
+      --stats-label: #6384c6;
+      --hero-body: #d9e6f9;
+      --px: max(90px, calc(50vw - 630px));
+    }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity .75s cubic-bezier(.22, 1, .36, 1), transform .75s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal-d1 {
+      transition-delay: .08s;
+    }
+
+    .reveal-d2 {
+      transition-delay: .16s;
+    }
+
+    .reveal-d3 {
+      transition-delay: .24s;
+    }
+
+    .reveal-d4 {
+      transition-delay: .32s;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 96px;
+      padding: 0 var(--px);
+      border-bottom: 1px solid rgba(0, 0, 0, .07);
+      transition: background .35s ease, backdrop-filter .35s ease, box-shadow .35s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(1, 22, 59, .92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 1px 20px rgba(0, 0, 0, .25);
+    }
+
+    .navbar-logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    .navbar-nav {
+      display: flex;
+      gap: 28px;
+    }
+
+    .navbar-nav a {
+      font-size: 14px;
+      color: #fff;
+      opacity: .8;
+      transition: opacity .2s;
+      position: relative;
+    }
+
+    .navbar-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #fff;
+      transition: width .25s ease;
+    }
+
+    .navbar-nav a:hover {
+      opacity: 1;
+    }
+
+    .navbar-nav a:hover::after {
+      width: 100%;
+    }
+
+    .navbar-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border: 1px solid rgba(255, 255, 255, .7);
+      border-radius: 51px;
+      font-size: 14px;
+      color: #fff;
+      transition: background .2s, border-color .2s, transform .15s;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .08);
+      border-color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost .arrow {
+      width: 14px;
+      height: 14px;
+      opacity: .7;
+      transition: transform .2s;
+    }
+
+    .btn-ghost:hover .arrow {
+      transform: translateX(3px);
+      opacity: 1;
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      background: var(--blue-primary);
+      border-radius: 51px;
+      font-size: 14px;
+      color: #fff;
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+
+    .btn-primary:hover {
+      background: #004ab5;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 60, 143, .4);
+    }
+
+    .btn-primary:active {
+      transform: none;
+    }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      background: var(--hero-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 var(--px) 90px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .hero-bg img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 121%;
+      height: auto;
+      transform-origin: bottom left;
+    }
+
+    /* top gradient fade */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #01163b 0%, rgba(1, 22, 59, .55) 45%, rgba(1, 22, 59, .82) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .hero-left {
+      width: 520px;
+    }
+
+    .hero-headline {
+      font-size: 60px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    .hero-headline em {
+      color: var(--blue-highlight);
+      font-style: normal;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-black {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 17px 28px;
+      background: #000;
+      border-radius: 84px;
+      font-size: 14px;
+      color: #fff;
+      white-space: nowrap;
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+
+    .btn-black:hover {
+      background: #1a1a1a;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+    }
+
+    .btn-black:active {
+      transform: none;
+    }
+
+    .hero-tagline {
+      font-size: 18px;
+      line-height: 1.52;
+      color: var(--hero-body);
+      max-width: 340px;
+    }
+
+    .hero-why {
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .04);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-why-label {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #fff;
+      text-transform: uppercase;
+      width: 188px;
+      margin-bottom: 24px;
+    }
+
+    .hero-feat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-feat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateX(16px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .hero-feat.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-feat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      backdrop-filter: blur(11px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hero-feat-icon img {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hero-feat-text {
+      font-size: 14px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ─── STATS ──────────────────────────────────────────── */
+    .stats {
+      background: var(--hero-bg);
+      padding: 40px var(--px);
+    }
+
+    .stats-inner {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      max-width: 1260px;
+    }
+
+    .stats-tagline {
+      font-size: 18px;
+      line-height: 1.625;
+      color: var(--hero-body);
+      width: 318px;
+      flex-shrink: 0;
+      margin-right: 81px;
+    }
+
+    .stats-divider {
+      flex-shrink: 0;
+      margin-right: 81px;
+    }
+
+    .stats-grid {
+      display: flex;
+      flex: 1;
+    }
+
+    .stat-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: -.75px;
+      color: var(--stats-num);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--stats-label);
+    }
+
+    /* ─── PRODUCTS ───────────────────────────────────────── */
+    .products {
+      background: #fff;
+      padding: 90px var(--px);
+    }
+
+    .products-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 28px;
+    }
+
+    .products-headline {
+      font-size: 60px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #000;
+      max-width: 799px;
+    }
+
+    .products-headline em {
+      color: var(--text-muted);
+      font-style: normal;
+    }
+
+    .products-desc {
+      font-size: 16px;
+      line-height: 1.42;
+      color: var(--text-dark);
+      max-width: 399px;
+    }
+
+    .products-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 64px;
+      padding: 4px 0;
+    }
+
+    .products-cta span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--blue-link);
+      transition: color .2s;
+    }
+
+    .products-cta img {
+      width: 16px;
+      height: 16px;
+      transition: transform .2s;
+    }
+
+    .products-cta:hover span {
+      color: #1a7cc5;
+    }
+
+    .products-cta:hover img {
+      transform: translateX(5px);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .product-card {
+      position: relative;
+      height: 447px;
+      border-radius: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 28px 52px rgba(0, 0, 0, .22);
+    }
+
+    .product-card-img {
+      position: absolute;
+      inset: 0;
+    }
+
+    .product-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-card-grad {
+      position: absolute;
+      bottom: 0;
+      left: -16px;
+      right: -16px;
+      height: 280px;
+      background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .75));
+    }
+
+    .product-card-body {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      color: #fff;
+    }
+
+    .product-card-title {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.42;
+      margin-bottom: 16px;
+    }
+
+    .product-card-desc {
+      font-size: 14px;
+      line-height: 1.625;
+      opacity: .9;
+    }
+
+    /* ─── STICKY APP WRAPPER ─────────────────────────────── */
+    .sticky-app-wrapper {
+      position: relative;
+    }
+
+    /* Fixed phone managed entirely by JS scroll handler */
+    .fixed-phone {
+      position: fixed;
+      width: 278px;
+      height: 535px;
+      left: calc(50% - 139px);
+      top: calc(50vh - 267px);
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity .45s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform, opacity;
+    }
+
+    .fixed-phone.ph-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .fixed-phone img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 24px 48px rgba(0, 0, 0, .38));
+    }
+
+    /* ─── SECURITY PANEL ─────────────────────────────────── */
+    .security {
+      background: var(--blue-security);
+      padding: 90px var(--px);
+      min-height: 382px;
+      display: flex;
+      align-items: center;
+    }
+
+    .security-inner {
+      width: 100%;
+    }
+
+    .security-headline {
+      font-size: 60px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #000;
+      max-width: 554px;
+      margin-bottom: 0;
+    }
+
+    .security-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 170px;
+      margin-top: 0;
+    }
+
+    .security-line {
+      flex: 1;
+      margin: 0 24px;
+    }
+
+    .security-desc {
+      font-size: 16px;
+      line-height: 1.42;
+      color: var(--text-dark);
+      max-width: 365px;
+      flex-shrink: 0;
+    }
+
+    /* ─── ECOSYSTEM PANEL ────────────────────────────────── */
+    .ecosystem {
+      background: #fff;
+      padding: 90px var(--px);
+      min-height: 778px;
+    }
+
+    .ecosystem-inner {
+      display: grid;
+      grid-template-columns: 1fr 320px 272px;
+      column-gap: 40px;
+      align-items: start;
+      max-width: 1260px;
+    }
+
+    .ecosystem-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .ecosystem-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ecosystem-headline {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #000;
+      margin-bottom: 28px;
+    }
+
+    .ecosystem-desc {
+      font-size: 14px;
+      line-height: 1.625;
+      color: var(--text-dark);
+      max-width: 365px;
+    }
+
+    .feat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 38px;
+      padding-top: 60px;
+    }
+
+    .feat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feat-item img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .feat-item p {
+      font-size: 16px;
+      line-height: 1.4;
+      color: var(--text-dark);
+    }
+
+    /* ─── HAND SECTION ───────────────────────────────────── */
+    .hand-section {
+      background: var(--blue-hand);
+      position: relative;
+      overflow: hidden;
+      min-height: 829px;
+      padding: 90px var(--px) 0;
+    }
+
+    .hand-header {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hand-headline {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #000;
+      max-width: 438px;
+    }
+
+    .hand-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 170px;
+      margin-top: 0;
+    }
+
+    .hand-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(0, 0, 0, .15);
+    }
+
+    .hand-desc {
+      font-size: 16px;
+      line-height: 1.42;
+      color: var(--text-dark);
+      max-width: 365px;
+      flex-shrink: 0;
+    }
+
+    /* The hand image – sticky within the section */
+    .hand-sticky-area {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hand-img-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .hand-img-wrap img {
+      position: absolute;
+      left: 25.07%;
+      /* 361/1440 */
+      bottom: -40px;
+      width: 51.94%;
+      /* 748/1440 */
+      height: auto;
+      will-change: transform;
+    }
+
+    /* Features left side (below header, above hand baseline) */
+    .hand-feat-left {
+      position: absolute;
+      left: var(--px);
+      bottom: 90px;
+      z-index: 3;
+      width: 272px;
+    }
+
+    /* QR code bottom right */
+    .hand-qr {
+      position: absolute;
+      right: var(--px);
+      bottom: 90px;
+      z-index: 3;
+      background: #fff;
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .12);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .hand-qr:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, .2);
+    }
+
+    .hand-qr-code {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+
+    .hand-qr-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .hand-qr-sub {
+      font-size: 14px;
+      color: var(--text-dark);
+      opacity: .65;
+      white-space: nowrap;
+    }
+
+
+
+    /* ─── CARD SECTION ───────────────────────────────────── */
+    .card-section {
+      background: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+      min-height: 960px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 90px var(--px);
+    }
+
+    .card-section-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .card-section-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 64px;
+    }
+
+    .card-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card-eyebrow-line {
+      width: 26px;
+      height: 1px;
+      background: #6c9be1;
+    }
+
+    .card-eyebrow-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #6c9be1;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .card-headline {
+      font-size: 60px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -1.5px;
+      color: #fff;
+      max-width: 913px;
+      margin-bottom: 20px;
+    }
+
+    .card-desc {
+      font-size: 18px;
+      line-height: 1.52;
+      color: var(--hero-body);
+      margin-bottom: 32px;
+      max-width: 820px;
+    }
+
+    .card-ctas {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-pill {
+      padding: 10px 24px;
+      border: 1px solid #fff;
+      border-radius: 51px;
+      font-size: 14px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, transform .15s, opacity .2s;
+    }
+
+    .btn-pill:hover {
+      background: rgba(255, 255, 255, .1);
+      transform: translateY(-1px);
+    }
+
+    .btn-pill.dim {
+      opacity: .3;
+    }
+
+    .btn-pill.dim:hover {
+      opacity: .55;
+    }
+
+    .card-footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-stack {
+      display: flex;
+    }
+
+    .icon-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #00a1fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 2px rgba(23, 35, 95, .3);
+      margin-right: -7px;
+      flex-shrink: 0;
+    }
+
+    .icon-circle:last-child {
+      margin-right: 0;
+    }
+
+    .icon-circle img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .card-footer-text {
+      margin-left: 8px;
+    }
+
+    .card-footer-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.4;
+      letter-spacing: -.9px;
+    }
+
+    .card-footer-sub {
+      font-size: 14px;
+      color: var(--stats-label);
+      line-height: 1.4;
+    }
+
+    .card-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .badge img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .card-regulated {
+      font-size: 14px;
+      color: rgba(255, 255, 255, .65);
+      line-height: 1.42;
+      max-width: 258px;
+    }
+
+    .card-regulated strong {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    .footer {
+      background: var(--footer-bg);
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      padding: 65px var(--px);
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 64px;
+    }
+
+    .footer-brand {
+      width: 196px;
+    }
+
+    .footer-brand img {
+      height: 32px;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      line-height: 1.625;
+      color: rgba(255, 255, 255, .4);
+      margin-bottom: 32px;
+    }
+
+    .footer-social-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .footer-social-icons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(209, 209, 209, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+
+    .footer-social-btn:hover {
+      border-color: rgba(255, 255, 255, .5);
+      background: rgba(255, 255, 255, .06);
+      transform: translateY(-2px);
+    }
+
+    .footer-social-btn img {
+      width: 14px;
+      height: 14px;
+    }
+
+    .footer-nav-cols {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-nav-col {
+      width: 196px;
+    }
+
+    .footer-nav-col-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .footer-nav-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .footer-nav-col ul li a {
+      font-size: 14px;
+      color: rgba(255, 255, 255, .55);
+      transition: color .2s;
+    }
+
+    .footer-nav-col ul li a:hover {
+      color: rgba(255, 255, 255, .9);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      padding-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .35);
+      line-height: 1.4;
+      max-width: 680px;
+    }
+
+    .footer-fgc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .25);
+      white-space: nowrap;
+    }
+
+    .footer-madeby {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .footer-madeby span {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .25);
+    }
+
+    .footer-madeby img {
+      width: 22px;
+      height: 22px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="navbar-logo">
+      <img src="assets/logo-navbar.png" alt="Porto Bank" />
+    </a>
+    <nav class="navbar-nav">
+      <a href="#">Conta</a>
+      <a href="#">Cartão</a>
+      <a href="#">Seguros</a>
+      <a href="#">Sobre</a>
+    </nav>
+    <div class="navbar-actions">
+      <a href="#" class="btn-ghost">
+        Entrar na conta
+        <img class="arrow" src="assets/icon-caret.svg" alt="" />
+      </a>
+      <a href="#" class="btn-primary">Abrir conta</a>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════════════════════ HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="assets/hero-bg.jpg" alt="" />
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-left reveal">
+        <h1 class="hero-headline">Financeiro simples. <em>Sólido desde sempre.</em></h1>
+        <div class="hero-cta-row">
+          <a href="#" class="btn-black">Abrir conta</a>
+          <p class="hero-tagline">Uma experiência financeira moderna. Conta digital, cartão e muito mais.</p>
+        </div>
+      </div>
+
+      <div class="hero-why reveal reveal-d2">
+        <p class="hero-why-label">Por que Porto Bank</p>
+        <div class="hero-feat-list">
+          <div class="hero-feat">
+            <div class="hero-feat-icon">
+              <img src="assets/icon-shield.svg" alt="" />
+            </div>
+            <span class="hero-feat-text">Proteção garantida</span>
+          </div>
+          <div class="hero-feat">
+            <div class="hero-feat-icon">
+              <img src="assets/icon-phone.svg" alt="" />
+            </div>
+            <span class="hero-feat-text">Sem anuidade</span>
+          </div>
+          <div class="hero-feat">
+            <div class="hero-feat-icon">
+              <img src="assets/icon-creditcard.svg" alt="" />
+            </div>
+            <span class="hero-feat-text">Conta gratuita</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ STATS -->
+  <section class="stats">
+    <div class="stats-inner">
+      <p class="stats-tagline reveal">Com a confiança de quem cuida de você há mais de 70 anos.</p>
+      <img src="assets/divider_vertical.svg" class="stats-divider" alt="" />
+      <div class="stats-grid">
+        <div class="stat-item reveal reveal-d1">
+          <span class="stat-number" data-count="15" data-suffix="M+">15M+</span>
+          <span class="stat-label">Clientes ativos</span>
+        </div>
+        <div class="stat-item reveal reveal-d2">
+          <span class="stat-number" data-count="4.8" data-decimal>4.8</span>
+          <span class="stat-label">Avaliação nas lojas</span>
+        </div>
+        <div class="stat-item reveal reveal-d3">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Suporte disponível</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ PRODUCTS -->
+  <section class="products">
+    <div class="products-head reveal">
+      <h2 class="products-headline">Tudo o que você precisa, <em>com a confiança de sempre.</em></h2>
+      <p class="products-desc">Conecte sua conta com seguros, assistência e serviços Porto em uma experiência unificada.
+      </p>
+    </div>
+    <a href="#" class="products-cta reveal reveal-d1">
+      <span>Conheça todas as vantagens</span>
+      <img src="assets/icon-caret-blue.svg" alt="" />
+    </a>
+
+    <div class="cards-grid">
+      <div class="product-card reveal reveal-d1">
+        <div class="product-card-img"><img src="assets/card-conta.jpg" alt="Conta digital gratuita" /></div>
+        <div class="product-card-grad"></div>
+        <div class="product-card-body">
+          <p class="product-card-title">Conta digital gratuita</p>
+          <p class="product-card-desc">Abra sua conta em minutos. Movimente, invista e organize tudo em um só lugar.</p>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-d2">
+        <div class="product-card-img"><img src="assets/card-ecossistema.jpg" alt="Ecossistema Porto" /></div>
+        <div class="product-card-grad"
+          style="top:0;height:100%;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.72))"></div>
+        <div class="product-card-body">
+          <p class="product-card-title">Integrado ao ecossistema Porto</p>
+          <p class="product-card-desc">Conecte sua conta com seguros, assistência e serviços Porto em uma experiência
+            unificada.</p>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-d3">
+        <div class="product-card-img"><img src="assets/card-cartao.jpg" alt="Cartão sem anuidade" /></div>
+        <div class="product-card-grad"></div>
+        <div class="product-card-body">
+          <p class="product-card-title">Cartão sem anuidade</p>
+          <p class="product-card-desc">Cartão de crédito sem anuidade, com programa de pontos e limites que se adaptam ao
+            seu perfil.</p>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-d4">
+        <div class="product-card-img" style="filter:blur(2px)"><img src="assets/card-ecossistema.jpg"
+            alt="Atendimento real" /></div>
+        <div class="product-card-grad"
+          style="top:0;height:100%;background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.7))"></div>
+        <div class="product-card-body">
+          <p class="product-card-title">Atendimento real, sempre</p>
+          <p class="product-card-desc">Fale com pessoas reais pelo app, chat ou telefone. Sem filas intermináveis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Fixed phone: rendered outside sections so position:fixed works correctly -->
+  <div class="fixed-phone" id="fixedPhone">
+    <img src="assets/app-mockup.png" alt="App Porto Bank" />
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ STICKY APP WRAPPER -->
+  <div class="sticky-app-wrapper" id="stickyWrapper">
+
+    <!-- Panel 1: Security -->
+    <section class="security">
+      <div class="security-inner">
+        <h2 class="security-headline reveal">Seus dinheiro,<br>sempre protegidos.</h2>
+        <div class="security-row">
+          <img src="assets/divider_horizontal.svg" class="security-line" alt="" />
+          <p class="security-desc reveal reveal-d2">Sua segurança não é uma promessa de marketing — é uma obrigação que
+            levamos a sério.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 2: Ecosystem -->
+    <section class="ecosystem">
+      <div class="ecosystem-inner">
+        <div class="reveal">
+          <div class="ecosystem-icon">
+            <img src="assets/icon-ecosystem.png" alt="" />
+          </div>
+          <h2 class="ecosystem-headline">Um ecossistema completo ao seu lado</h2>
+          <p class="ecosystem-desc">Conta, cartão, seguros e assistências Porto em um único lugar. Menos apps, mais
+            praticidade.</p>
+        </div>
+        <!-- centre column: phone floats here via the rail above -->
+        <div></div>
+        <div class="feat-list reveal reveal-d2">
+          <div class="feat-item">
+            <img src="assets/icon-cashback.svg" alt="" />
+            <p>Acumule pontos e troque por passagens, produtos ou cashback.</p>
+          </div>
+          <div class="feat-item">
+            <img src="assets/icon-controle.svg" alt="" />
+            <p>Controle total da sua vida financeira pelo app</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- /sticky-app-wrapper -->
+
+
+  <!-- ═══════════════════════════════════════════════════════ HAND SECTION -->
+  <section class="hand-section" id="handSection">
+    <!-- sticky hand image sits behind content -->
+    <div class="hand-sticky-area">
+      <div class="hand-img-wrap">
+        <img id="handImg" src="assets/hand.png" alt="Mão segurando o app Porto Bank" />
+      </div>
+    </div>
+
+    <!-- header above the hand -->
+    <div class="hand-header">
+      <h2 class="hand-headline reveal">Seu banco no bolso, sem complicação</h2>
+      <div class="hand-row">
+        <div class="hand-line"></div>
+        <p class="hand-desc reveal reveal-d2">O app Porto Bank foi desenhado para quem quer clareza, não confusão. Você
+          vê o que importa, faz o que precisa e segue em frente em segundos.</p>
+      </div>
+    </div>
+
+    <!-- features lower-left -->
+    <div class="hand-feat-left feat-list reveal">
+      <div class="feat-item">
+        <img src="assets/icon-lightning.svg" alt="" />
+        <p>Sem burocracia para solicitar aumento. O sistema analisa seu perfil e ajusta automaticamente.</p>
+      </div>
+      <div class="feat-item">
+        <img src="assets/icon-fingerprint.svg" alt="" />
+        <p>Biometria, notificações de acesso e bloqueio rápido de cartão direto no app. Protegido por padrão.</p>
+      </div>
+    </div>
+
+    <!-- QR code bottom-right -->
+    <a href="#" class="hand-qr reveal">
+      <div class="hand-qr-code">
+        <!-- SVG QR placeholder matching Figma style -->
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <rect width="60" height="60" rx="6" fill="#f5f5f5" />
+          <!-- top-left corner -->
+          <rect x="6" y="6" width="20" height="20" rx="3" fill="#111" />
+          <rect x="9" y="9" width="14" height="14" rx="2" fill="#f5f5f5" />
+          <rect x="12" y="12" width="8" height="8" fill="#111" />
+          <!-- top-right corner -->
+          <rect x="34" y="6" width="20" height="20" rx="3" fill="#111" />
+          <rect x="37" y="9" width="14" height="14" rx="2" fill="#f5f5f5" />
+          <rect x="40" y="12" width="8" height="8" fill="#111" />
+          <!-- bottom-left corner -->
+          <rect x="6" y="34" width="20" height="20" rx="3" fill="#111" />
+          <rect x="9" y="37" width="14" height="14" rx="2" fill="#f5f5f5" />
+          <rect x="12" y="40" width="8" height="8" fill="#111" />
+          <!-- data dots -->
+          <rect x="34" y="34" width="5" height="5" rx="1" fill="#111" />
+          <rect x="41" y="34" width="5" height="5" rx="1" fill="#111" />
+          <rect x="48" y="34" width="5" height="5" rx="1" fill="#111" />
+          <rect x="34" y="41" width="5" height="5" rx="1" fill="#111" />
+          <rect x="48" y="41" width="5" height="5" rx="1" fill="#111" />
+          <rect x="34" y="48" width="5" height="5" rx="1" fill="#111" />
+          <rect x="41" y="48" width="5" height="5" rx="1" fill="#111" />
+          <rect x="48" y="48" width="5" height="5" rx="1" fill="#111" />
+          <rect x="27" y="6" width="5" height="5" rx="1" fill="#111" />
+          <rect x="27" y="13" width="5" height="5" rx="1" fill="#111" />
+          <rect x="27" y="27" width="5" height="5" rx="1" fill="#111" />
+          <rect x="6" y="27" width="5" height="5" rx="1" fill="#111" />
+          <rect x="13" y="27" width="5" height="5" rx="1" fill="#111" />
+          <rect x="20" y="27" width="5" height="5" rx="1" fill="#111" />
+          <rect x="41" y="27" width="5" height="5" rx="1" fill="#111" />
+          <rect x="48" y="27" width="5" height="5" rx="1" fill="#111" />
+        </svg>
+      </div>
+      <div>
+        <p class="hand-qr-title">Baixe o app Porto Bank</p>
+        <p class="hand-qr-sub">Disponível para Android e IOS</p>
+      </div>
+    </a>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ CARD SECTION -->
+  <section class="card-section">
+    <div class="card-section-bg">
+      <img src="assets/card-section-bg.jpg" alt="" />
+    </div>
+
+    <div class="card-content">
+      <div class="card-eyebrow reveal">
+        <div class="card-eyebrow-line"></div>
+        <span class="card-eyebrow-text">Cartão Porto Bank</span>
+      </div>
+      <h2 class="card-headline reveal reveal-d1">Um cartão sem<br>anuidade e com benefícios reais.</h2>
+      <p class="card-desc reveal reveal-d2">Sem taxas escondidas, sem letra miúda. O cartão Porto Bank foi criado para ser
+        simples.</p>
+      <div class="card-ctas reveal reveal-d3">
+        <a href="#" class="btn-pill">Programa de pontos</a>
+        <a href="#" class="btn-pill dim">Cartão virtual imediato</a>
+      </div>
+    </div>
+
+    <div class="card-footer reveal">
+      <div class="card-footer-left">
+        <div class="icon-stack">
+          <div class="icon-circle"><img src="assets/icon-gift.svg" alt="" /></div>
+          <div class="icon-circle"><img src="assets/icon-mobile.svg" alt="" /></div>
+          <div class="icon-circle"><img src="assets/icon-globe.svg" alt="" /></div>
+          <div class="icon-circle"><img src="assets/icon-bolt.svg" alt="" /></div>
+        </div>
+        <div class="card-footer-text">
+          <p class="card-footer-title">Tudo o que você precisa, numa só conta.</p>
+          <p class="card-footer-sub">Conta, cartão, seguro e muito mais em um único app.</p>
+        </div>
+      </div>
+      <div class="card-footer-right">
+        <div class="badge">
+          <img src="assets/icon-verified.svg" alt="" />
+        </div>
+        <p class="card-regulated">Regulada e supervisionada pelo <strong>Banco Central do Brasil</strong></p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/logo-footer.png" alt="Porto Bank" />
+        <p class="footer-brand-desc">Serviços financeiros com a solidez de quem cuida de você há mais de 70 anos.</p>
+        <p class="footer-social-label">Acompanhe nas redes sociais</p>
+        <div class="footer-social-icons">
+          <a href="#" class="footer-social-btn"><img src="assets/social-x.svg" alt="X" /></a>
+          <a href="#" class="footer-social-btn"><img src="assets/social-instagram.svg" alt="Instagram" /></a>
+          <a href="#" class="footer-social-btn"><img src="assets/social-linkedin.svg" alt="LinkedIn" /></a>
+          <a href="#" class="footer-social-btn"><img src="assets/social-youtube.svg" alt="YouTube" /></a>
+        </div>
+      </div>
+
+      <div class="footer-nav-cols">
+        <div class="footer-nav-col">
+          <p class="footer-nav-col-title">Produto</p>
+          <ul>
+            <li><a href="#">Conta digital</a></li>
+            <li><a href="#">Cartão de crédito</a></li>
+            <li><a href="#">Pix e transferências</a></li>
+            <li><a href="#">Rendimento automático</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-col-title">Empresa</p>
+          <ul>
+            <li><a href="#">Sobre a Porto</a></li>
+            <li><a href="#">Carreiras</a></li>
+            <li><a href="#">Imprensa</a></li>
+            <li><a href="#">Responsabilidade social</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-col-title">Suporte</p>
+          <ul>
+            <li><a href="#">Central de ajuda</a></li>
+            <li><a href="#">Fale conosco</a></li>
+            <li><a href="#">Ouvidoria</a></li>
+            <li><a href="#">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-col-title">Legal</p>
+          <ul>
+            <li><a href="#">Termos de uso</a></li>
+            <li><a href="#">Política de privacidade</a></li>
+            <li><a href="#">Tarifas e limites</a></li>
+            <li><a href="#">Regulatório</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Porto Seguro Companhia de Seguros Gerais S.A. — CNPJ 61.198.164/0001-60. Porto Bank
+        é uma instituição financeira regulada pelo Banco Central do Brasil.</p>
+      <p class="footer-fgc">Depósitos garantidos pelo FGC até R$ 250.000</p>
+      <div class="footer-madeby">
+        <span>Feito por</span>
+        <img src="assets/feito-por.svg" alt="" />
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    /* ── NAVBAR SCROLL ─────────────────────────────────────── */
+    const navbar = document.getElementById('navbar');
+    const onScroll = () => navbar.classList.toggle('scrolled', scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* ── SCROLL REVEAL (IntersectionObserver) ──────────────── */
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    /* ── HERO FEATURES STAGGER ──────────────────────────────── */
+    const heroFeatObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.hero-feat').forEach((f, i) => {
+            setTimeout(() => f.classList.add('visible'), 300 + i * 100);
+          });
+          heroFeatObs.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    const heroEl = document.querySelector('.hero');
+    if (heroEl) heroFeatObs.observe(heroEl);
+
+    /* ── COUNTER ANIMATION ──────────────────────────────────── */
+    function runCounter(el) {
+      const raw = el.dataset.count;
+      const isFloat = el.dataset.decimal !== undefined;
+      const target = parseFloat(raw);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1800, fps = 60, steps = dur / (1000 / fps);
+      let cur = 0, frame = 0;
+      const tick = () => {
+        frame++;
+        const ease = 1 - Math.pow(1 - frame / steps, 3);
+        cur = target * ease;
+        el.textContent = isFloat ? cur.toFixed(1) : Math.floor(cur) + suffix;
+        if (frame < steps) requestAnimationFrame(tick);
+        else el.textContent = isFloat ? target.toFixed(1) : target + suffix;
+      };
+      requestAnimationFrame(tick);
+    }
+    const counterObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.target.dataset.count) {
+          runCounter(e.target); counterObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+    /* ── FIXED PHONE (sticky simulation via position:fixed + JS) ── */
+    const stickyWrapper = document.getElementById('stickyWrapper');
+    const fixedPhone = document.getElementById('fixedPhone');
+    const handSection = document.getElementById('handSection');
+    const handImg = document.getElementById('handImg');
+
+    function updatePhoneOnScroll() {
+      if (!fixedPhone || !stickyWrapper || !handSection || !handImg) return;
+      
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY || window.pageYOffset;
+      const phoneHeight = fixedPhone.offsetHeight || 535;
+      
+      const security = document.querySelector('.security');
+      if (!security) return;
+
+      // 1. Subtle parallax on the hand image
+      const hRect = handSection.getBoundingClientRect();
+      const par = Math.max(0, Math.min(1, -hRect.top / vh));
+      handImg.style.transform = `translateY(${par * -50}px)`;
+
+      // 2. Track absolute positions
+      const secRect = security.getBoundingClientRect();
+      const handImgRect = handImg.getBoundingClientRect();
+
+      // Calculate absolute document Y boundaries
+      const absStart = (scrollY + secRect.bottom) - (secRect.height * 0.2);
+      // O celular deve parar com sua base na metade da imagem da mão
+      const absStop = (scrollY + handImgRect.top) + (handImgRect.height * 0.5) - phoneHeight;
+      const absCenter = scrollY + (vh / 2) - (phoneHeight / 2);
+
+      // Clamp target Y between start and stop
+      let targetAbsY = absCenter;
+      if (targetAbsY < absStart) targetAbsY = absStart;
+      if (targetAbsY > absStop) targetAbsY = absStop;
+
+      // Convert absolute Y to screen Y
+      const screenY = targetAbsY - scrollY;
+      
+      // Calculate relative translateY based on CSS top property
+      const baseTop = (vh / 2) - (phoneHeight / 2);
+      const translateY = screenY - baseTop;
+
+      fixedPhone.style.transform = `translateY(${translateY}px)`;
+      
+      // Control visibility
+      if (scrollY + vh > (scrollY + secRect.top)) {
+        fixedPhone.style.opacity = '1';
+      } else {
+        fixedPhone.style.opacity = '0';
+      }
+    }
+
+    window.addEventListener('scroll', updatePhoneOnScroll, { passive: true });
+    updatePhoneOnScroll();
+  </script>
+</body>
+
+</html>
